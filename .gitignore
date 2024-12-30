@@ -1,0 +1,19 @@
+### IntelliJ IDEA ###
+*.class
+*.jar
+*.log
+/target
+.idea
+/uploads
+*.iml
+*.iws
+*.ipr
+/lib
+HELP.md
+.mvn
+mvnm
+mvnm.cmd
+
+
+
+
