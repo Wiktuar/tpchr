@@ -34,7 +34,7 @@ public interface AlbumRepo extends CrudRepository<Album, Long> {
     @Query("select new ru.tpchr.DTO.LikesAlbumDto(a.id, a.header,a.fileName, a.releaseDate, a.songPreview, a.author.email, a.author.firstName, a.author.lastName, a.author.pathToAvatar, (select s from Song s where s.urlToMusicFile = a.songPreview), size(a.likes) , size(a.comments) , " +
             "sum(case when al.email = :email then 1 else 0 end) > 0 ) " +
             "from Album a left join a.likes al group by a having a.author.email = :email")
-    Set<LikesAlbumDto> getAlbumsByUser(@Param("email") String email);
+    List<LikesAlbumDto> getAlbumsByUser(@Param("email") String email);
 
     //  получение конкретного LikesAlbumDto по ID альбома
     @Query("select new ru.tpchr.DTO.LikesAlbumDto(a.id, a.header,a.fileName, a.releaseDate, a.songPreview, a.author.email, a.author.firstName, a.author.lastName, a.author.pathToAvatar, (select s from Song s where s.urlToMusicFile = a.songPreview), size(a.likes) , size(a.comments) , " +

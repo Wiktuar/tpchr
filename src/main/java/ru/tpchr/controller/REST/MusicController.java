@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import ru.tpchr.DTO.CompositionDTO;
 import ru.tpchr.DTO.EditAlbumDTO;
 import ru.tpchr.DTO.LikesAlbumDto;
 import ru.tpchr.entities.music.Album;
@@ -68,6 +69,10 @@ public class MusicController {
                                 @RequestParam("duration") String[] durations,
                                 @RequestParam("file") MultipartFile[] files,
                                 Principal principal) throws IOException {
+        for(String h : headers){
+            System.out.println("Заголовок песни: " + h);
+        }
+
 
         if(id == 0){
             if(!albumService.checkAlbumNotExists(albumHeader, principal.getName())) throw new ComposeExistsException();
@@ -84,6 +89,7 @@ public class MusicController {
         album.setAuthor(authorService.getAuthorByEmail(principal.getName()));
 
         Path uploadFolder = Paths.get(uploadPath + principal.getName() + "/music/" + albumHeader);
+        System.out.println("Путь альбома: " + uploadFolder);
 
         if(!oldAlbumHeader.isEmpty() && !oldAlbumHeader.equals(albumHeader)){
             boolean result = new File(uploadPath + principal.getName() + "/music/" + oldAlbumHeader)
@@ -91,17 +97,18 @@ public class MusicController {
             if (!result) System.out.println("Не удалось переименовать файл");
         }
 
+
         if(!Files.exists(uploadFolder)){
             try {
                 Files.createDirectories(uploadFolder);
             } catch (IOException e) {
-                System.out.println("Не удается создать альбом " + uploadFolder);
+                System.out.println("Не удается создать альбом " + uploadFolder.toString());
             }
         }
 
         if(coverImage.equals("defaultCover.png")){
             try {
-                Files.copy(Paths.get(albumCoverPath), Paths.get(uploadFolder + "/defaultCover.jpg"));
+                Files.copy(Paths.get(albumCoverPath), Paths.get(uploadFolder.toString() + "/defaultCover.jpg"));
             } catch (IOException e) {
                 System.out.println("Не удается скопировать дефолтную обложку");
             }
@@ -118,7 +125,15 @@ public class MusicController {
 
 
         for (int i = 0; i < headers.length; i++) {
-            if(headers[i].isEmpty())continue;
+            if(oldSongUrls[i].isEmpty() && headers[i].isEmpty())continue;
+
+            if(!oldSongUrls[i].isEmpty() &&  headers[i].isEmpty()){
+                songService.deleteSongByUrlToMusicFile(oldSongUrls[i]);
+                Files.deleteIfExists(Paths.get(uploadPath + oldSongUrls[i]));
+                continue;
+            }
+
+
             Song song = new Song();
             if(ides[i] != 0) song.setId(ides[i]);
             song.setHeader(headers[i]);
@@ -141,12 +156,10 @@ public class MusicController {
 //               если была изменена песня
             } else {
                 if(!oldSongUrls[i].isEmpty()) {
-                    System.out.println(oldSongUrls[i]);
-                    System.out.println(uploadPath + oldSongUrls[i]);
                     Files.deleteIfExists(Paths.get(uploadPath + oldSongUrls[i]));
                 }
                 files[i].transferTo(new File(uploadPath + principal.getName() + "/music/" + albumHeader + "/" + files[i].getOriginalFilename()));
-                song.setUrlToMusicFile(principal.getName() + "/music/" + albumHeader + "/" + files[i].getOriginalFilename());
+                  song.setUrlToMusicFile(principal.getName() + "/music/" + albumHeader + "/" + files[i].getOriginalFilename());
                 song.setDuration(durations[i]);
                 try {
                     song.setDuration(Utils.getMusicFileDuration(uploadPath + principal.getName() + "/music/" + albumHeader + "/" + files[i].getOriginalFilename()));
@@ -155,10 +168,10 @@ public class MusicController {
                 }
             }
 
-            if(i == 0 ){
+            if(Objects.isNull(album.getSongPreview())){
                 album.setSongPreview(song.getUrlToMusicFile());
-                System.out.println("address of preview " + album.getSongPreview());
             }
+            System.out.println("Cсылка на песню " + song.getUrlToMusicFile());
             album.addSong(song);
         }
 
@@ -183,12 +196,22 @@ public class MusicController {
 
     //  метод, возвращающий превью музыкальных альбомов для конкретного автора
     @GetMapping("/authors/{id}/albums")
-    public ResponseEntity<List<LikesAlbumDto>> getAlbumsByAuthorId(
+    public ResponseEntity<List<? extends CompositionDTO>> getAlbumsByAuthorId(
             @PathVariable long id,
             Principal principal){
-        List<LikesAlbumDto> lpd =  albumService.getAlbumsByUserID(principal.getName(), id);
+        String principalName = "";
+        principalName = (Objects.isNull(principal)) ? "default" : principal.getName();
+        List<? extends CompositionDTO> lpd =  albumService.getAlbumsByUserID(principalName, id);
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(lpd.size()))
                 .body(lpd);
+    }
+
+//  метод, возвращающий размер переданного файла
+    @PostMapping("/main/filesize")
+    public String getFileSize(@RequestParam("filePath") String filePath){
+        File file = new File(uploadPath + filePath);
+        long fileSize = file.length();
+        return String.valueOf(fileSize);
     }
 }

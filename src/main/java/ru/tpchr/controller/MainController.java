@@ -12,6 +12,7 @@ import ru.tpchr.services.AuthorService;
 import ru.tpchr.services.ContentService;
 import ru.tpchr.services.PoemService;
 import ru.tpchr.utils.HeaderMenuUtil;
+import ru.tpchr.utils.Utils;
 
 import java.util.List;
 
@@ -58,11 +59,12 @@ public class MainController {
     }
 
 
-    //  метод, возвращающий стихотворение с его лайками и комментариями
+//  метод, возвращающий стихотворение с его лайками и комментариями
     @GetMapping("/main/poem/{id}")
     public String getPoemById(@PathVariable long id,
                               Model model){
         LikesPoemDto likesPoemDto = poemService.getPoemDtoWithLikesAndComments(headerMenuUtil.getPrincipalName(), id);
+        likesPoemDto.setReleaseDate(Utils.getFormatedDate(likesPoemDto.getReleaseDate()));
         String content = contentService.findById(id).getContent();
         likesPoemDto.setContent(content);
         model.addAttribute("authorDTO", headerMenuUtil.getAuthorDTO());
@@ -70,9 +72,17 @@ public class MainController {
         return "single/singlePoem";
     }
 
+//  метод для аутентификации для лайка стихотворения
     @GetMapping("/target/poem/{id}")
     public String getLoginPoem(@PathVariable String id){
         String targetString = "/main/poem/" + id;
+        return "redirect:" + targetString;
+    }
+
+//  метод для аутентификации для лайка музыкального альбома
+    @GetMapping("/target/album/{id}")
+    public String getLoginAlbum(@PathVariable String id){
+        String targetString = "/main/music/" + id;
         return "redirect:" + targetString;
     }
 }

@@ -66,4 +66,7 @@ public interface AuthorRepo extends CrudRepository<Author, Long> {
 
     @Override
     void deleteById(Long id);
+
+    @Query("select distinct new ru.tpchr.DTO.AuthorDTO(a.id, a.firstName, a.lastName, a.pathToAvatar) from Author a where size(a.compositions) > 0")
+    List<AuthorDTO> getOnlyAuthors();
 }

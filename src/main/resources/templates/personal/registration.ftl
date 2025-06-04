@@ -19,7 +19,7 @@
     <@c.header></@c.header>
 
     <div class="container">
-        <h3>Для того, что стать автором на сайте, пожалуйста, заполните эту форму</h3>
+        <h3>Добро пожаловать! Очень рады Вам!</h3>
     <#-- параметры формы method и action задаются через js -->
         <form id="regForm">
             <div class="flex-container">
@@ -72,7 +72,7 @@
             <div class="additional">
                 <div class="about_me">
                     <p class="about_me_header">Расскажите немного о себе. Где вы живете? Чем увлекаетесь? Что вдохновляет Вас на творчество? Что для Вас Православие? и т.д.</p>
-                    <textarea name="description" maxlength="2000" placeholder="Всего 2000 символов"></textarea>
+                    <textarea id="description" name="description" maxlength="2000" placeholder="Всего 2000 символов"></textarea>
                 </div>
                 <uL class="social-box">
                     <li class="sc-block">
@@ -106,11 +106,13 @@
 <script src="/js/modal/plugins/modal.js"></script>
 <script src="/js/modal/index.js"></script>
 <script src="/js/modal/attention.js"></script>
+
 <#--Скрипты добавления аватара и социальных сетей-->
 <script src="/js/imagePreview.js"></script>
 <script src="/js/socialBox.js"></script>
 <#--Скрипты отправки формы-->
 <script src="/js/registerControl.js"></script>
+<script src="/js/header.js"></script>
 <script src="/js/sendForm.js"></script>
 </body>
 </html>

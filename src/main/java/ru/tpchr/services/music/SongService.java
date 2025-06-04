@@ -20,4 +20,10 @@ public class SongService {
     public Set<Song> getAllSongsByAlbumId(long id){
         return songRepo.getAllByAlbumId(id);
     }
+
+    //  метод удаления песни по url
+    public void deleteSongByUrlToMusicFile(String url){
+        Song song = songRepo.getSongByUrlToMusicFile(url);
+        songRepo.delete(song);
+    }
 }

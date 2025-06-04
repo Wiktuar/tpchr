@@ -3,6 +3,7 @@ package ru.tpchr.utils;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.tritonus.share.sampled.file.TAudioFileFormat;
+import ru.tpchr.DTO.CompositionDTO;
 import ru.tpchr.entities.Composition;
 import ru.tpchr.entities.security.Author;
 import ru.tpchr.entities.security.Role;
@@ -19,15 +20,17 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Utils {
+
+    //  k - 24- часовой формат времени, h- 12-ти часовой формат времени
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd kk:mm:ss");
+    private static final DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
     //метод преобразования ролей в GrantedAuthority для Spring Security
     public static Collection<? extends GrantedAuthority> mapRoleToAuthority(Set<Role> roles) {
@@ -38,19 +41,17 @@ public class Utils {
 
     //метод сохранения аватара автора, обложек стихов и музыкальных альбомов
     public static void saveCircumcisedImage(String uploadPath, String imagePath, String fileName){
-        System.out.println("Сохраняем файл автара пользователя");
         String base64Image = imagePath.split(",")[1];
         System.out.println(base64Image);
         byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
         try {
             BufferedImage bImg = ImageIO.read(new ByteArrayInputStream(imageBytes));
             File outputFile = new File(uploadPath + fileName);
-            System.out.println(outputFile.toString());
             ImageIO.write(bImg, "jpg", outputFile);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("Cохранили автар пользователя");
+        System.out.println("Cохранили аватар пользователя");
     }
 
 //  метод, который возвращает URL сайта
@@ -61,12 +62,18 @@ public class Utils {
         return siteURL.replace(request.getServletPath(), "");
     }
 
+
 //  метод, переводящий в строку текущее время. (в базе данных время хранится в виде строки)
     public static String convertTimeToString(){
-        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
-//  k - 24- часовой форват времени, h- 12-ти часовой формат времени
-        return new SimpleDateFormat("dd-MM-yyyy kk:mm:ss").format(timestamp);
+        return LocalDateTime.now().format(formatter);
     }
+
+    //  метод, возвращающий строку времени в нужноv для вывода порядке
+    public static String getFormatedDate(String inputDate){
+        LocalDateTime ldt = LocalDateTime.parse(inputDate, formatter);
+        return ldt.format(outputFormatter);
+    }
+
 
 //  метод, берущий стизотворение и выделяющий из него первые четыре строфы
     public static String getPoemPreview(String[] data){
@@ -86,12 +93,17 @@ public class Utils {
 
 //  метод, добавляющий тег переноса строки в описание автора
     public static String addBrTagDescription(String data){
-        return data.replaceAll("\\r\\n", "<br><br>");
+        return Arrays.stream(data.split("\\r\\n")).filter(s -> !s.isEmpty())
+                .collect(Collectors.joining("<br><br>"));
     }
 
-//  метод, добавляющий вметс <br> символы переноса строки
+//  метод, добавляющий вместо <br> символы переноса строки
     public static String removeBrTagDescription(String data){
-        return data.replaceAll("<br><br>", "&#10");
+        String result = null;
+        if(data != null){
+            result = data.replaceAll("<br><br>", "&#10");
+        }
+        return result;
     }
 
 //  метод, возвращающий времмя аудиотрека с минутаи и секундами
@@ -112,8 +124,9 @@ public class Utils {
         }
     }
 
-//  установление социаьным сетям автора параметр null, если с формы пришла пустая строка
+//  установление социаьным сетям автора и его описанию параметр null, если с формы пришла пустая строка
     public static void changeSocialNets(Author author){
+        if(author.getDescription().isEmpty())author.setDescription(null);
         if(author.getVk().isEmpty())author.setVk(null);
         if(author.getYt().isEmpty())author.setYt(null);
         if(author.getTg().isEmpty())author.setTg(null);
@@ -124,5 +137,18 @@ public class Utils {
     public static void changeFileName(Composition c, Pattern p, String email ){
         Matcher m = p.matcher(c.getFileName());
         c.setFileName(m.replaceFirst(email));
+    }
+
+
+//  метод сортировки полученного списка Composition
+    public static List<? extends CompositionDTO> sortCompositionList(List<? extends CompositionDTO> compList){
+        compList.sort(new Comparator<CompositionDTO>() {
+            @Override
+            public int compare(CompositionDTO o1, CompositionDTO o2) {
+                return o2.getReleaseDate().compareTo(o1.getReleaseDate());
+            }
+        });
+        compList.forEach(a -> a.setReleaseDate(Utils.getFormatedDate(a.getReleaseDate())));
+        return compList;
     }
 }

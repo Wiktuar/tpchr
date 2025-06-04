@@ -22,8 +22,11 @@
             <h1 st>Этот раздел находится в разработке. Скоро все будет работать! Немного терпения :))</h1>
         </div>>
     </div>
-<#--блок добавления футера-->
-<@c.footer></@c.footer>
-    <script src="/js/header.js"></script>
+    <#--    мобильное меню для сайта   -->
+    <@c.bottomMenu></@c.bottomMenu>
+    <#--блок добавления футера-->
+    <@c.footer></@c.footer>
+</div>
+<script src="/js/header.js"></script>
 </body>
 </html>

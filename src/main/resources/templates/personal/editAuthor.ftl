@@ -3,6 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="/css/reset.css">
     <link rel="stylesheet" href="/css/common/common.css">
     <link rel="stylesheet" href="/css/cabinet/editAuthor.css">
@@ -57,7 +60,7 @@
                 <div class="additional">
                     <div class="about_me">
                         <p class="about_me_header">Расскажите немного о себе. Где вы живете? Чем увлекаетесь? Что вдохновляет Вас на творчество? Что для Вас Православие? и т.д.</p>
-                        <textarea name="description" maxlength="2000" placeholder="Всего 2000 символов" spellcheck="true" wrap="soft">${author.description}</textarea>
+                        <textarea name="description" maxlength="2000" placeholder="Всего 2000 символов" spellcheck="true" wrap="soft"><#if author.description??>${author.description}</#if></textarea>
                     </div>
                     <uL class="social-box">
                         <li class="sc-block">
@@ -83,7 +86,11 @@
             </form>
         </div>
     </div>
-<@c.footer></@c.footer>
+    <#--    мобильное меню для сайта   -->
+    <@c.bottomMenu></@c.bottomMenu>
+    <#--блок добавления футера-->
+    <@c.footer></@c.footer>
+</div>
 <#-- Скрипты, относящиеся к модальному окну -->
 <script src="/js/modal/base.js"></script>
 <script src="/js/modal/plugins/modal.js"></script>

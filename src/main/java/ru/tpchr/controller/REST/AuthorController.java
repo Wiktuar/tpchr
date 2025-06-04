@@ -65,6 +65,7 @@ public class AuthorController {
 
         setPathToAvatar(author, targetPath);
 
+        author.setDescription(Utils.addBrTagDescription(author.getDescription()));
         Utils.changeSocialNets(author);
 
         authorService.saveAuthor(author);

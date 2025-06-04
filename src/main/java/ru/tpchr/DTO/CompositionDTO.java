@@ -46,6 +46,4 @@ public class CompositionDTO {
         this.comments = comments;
         this.meLiked = meLiked;
     }
-
-
 }

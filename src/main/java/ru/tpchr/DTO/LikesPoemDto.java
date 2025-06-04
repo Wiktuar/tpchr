@@ -24,7 +24,7 @@ public class LikesPoemDto extends CompositionDTO {
         this.poemPreview = poemPreview;
     }
 
-    public LikesPoemDto(long id, String header, String fileName, String releaseDate, int likes, int comments, boolean meLiked) {
-        super(id, header, fileName, releaseDate, likes, comments, meLiked);
+    public LikesPoemDto(long id, String header, String fileName, String releaseDate, String email, String firstName, String lastName, String pathToAvatar, int likes, int comments, boolean meLiked) {
+        super(id, header, fileName, releaseDate, email, firstName, lastName, pathToAvatar, likes, comments, meLiked);
     }
 }

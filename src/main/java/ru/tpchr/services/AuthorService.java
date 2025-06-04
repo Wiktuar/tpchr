@@ -215,5 +215,10 @@ public class AuthorService implements UserDetailsService {
     public void deleteAuthorById(long id){
         authorRepo.deleteById(id);
     }
+
+//  метод получения только тех авторов, у которых есть стихотворения
+    public List<AuthorDTO> getOnlyAuthors(){
+        return authorRepo.getOnlyAuthors();
+    }
 }
 

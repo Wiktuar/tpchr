@@ -20,19 +20,6 @@
     <@c.header></@c.header>
     <#--блок с основным контентом-->
     <div class="container">
-
-        <div class="author">
-            <img src="/img/myPhoto.jpg" class="my-photo" alt="Фото автора сайта">
-            <div>
-                <h3 class="appeal">Дорогие посетители сайта!</h3>
-                <p class="about_author">Всем привет! Меня зовут Виктор. Я руководитель и творческий вдохновитель
-                    проекта "Творчество православных христиан". Сейчас мой проект на самом старте своего существования. Многое уже сделано,
-                    и еще больше предстоит сделать. Если вы пишите стихи или музыку, а, может то и другое, присоединяйтесь к нам. Становитесь авторами.
-                    Вместе мы сожем донести православную поэзию и музыку до многих людей и сделать этот мир прекраснее. Вы также ожете написать мне отзыв или
-                    пожелание. Для этого просто <a href="/main/review" class="write_result" title="Написать отзыв">перейдите по ссылке</a></p>
-            </div>
-        </div>
-
         <div class="compose_container">
             <#list allComposDTO as acd>
                 <#if acd.compType == 1>
@@ -55,9 +42,9 @@
                                 ${acd.textPreview}
                             </div>
                             <a href="/main/poem/${acd.id}">
-                                <div class="full_reading">
-                                    читать полностью
-                                </div></a>
+                            <div class="full_reading">
+                                читать полностью
+                            </div></a>
                         </div>
 
                         <div class="poem_box_footer">

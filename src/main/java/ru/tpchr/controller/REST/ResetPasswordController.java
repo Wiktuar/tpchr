@@ -3,6 +3,7 @@ package ru.tpchr.controller.REST;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.tpchr.entities.security.Author;
@@ -10,6 +11,7 @@ import ru.tpchr.exceptions.AuthorExistsException;
 import ru.tpchr.services.AuthorService;
 
 @RestController
+@RequestMapping("/reset")
 public class ResetPasswordController {
     private AuthorService authorService;
 

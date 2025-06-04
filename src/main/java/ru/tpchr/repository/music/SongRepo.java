@@ -8,4 +8,9 @@ import java.util.Set;
 public interface SongRepo extends CrudRepository<Song, Long> {
     //метод получения песен по ID альбома
     Set<Song> getAllByAlbumId(Long id);
+
+    Song getSongByUrlToMusicFile(String url);
+
+    @Override
+    void delete(Song entity);
 }

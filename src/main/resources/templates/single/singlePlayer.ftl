@@ -4,6 +4,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <link rel="stylesheet" href="/css/reset.css">
   <link rel="stylesheet" href="/css/common/common.css">
   <link rel="stylesheet" href="/css/music.css">
@@ -47,13 +50,18 @@
       </div>
 
       <div class="meta">
-        <div class="like_comment">
-          <span class="like_btn"></span>
-          <span class="p_digit_l">${album.likes}</span>
-          <img src="/img/comments.png" class="p_comment" alt="комментарии">
-          <span class="p_digit_c">${album.comments}</span>
-        </div>
-        <div class="releaseDate">${album.releaseDate?truncate(11, "")}</div>
+          <div class="like_comment">
+             <span class="like_btn"></span>
+             <span class="p_digit_l">${album.likes}</span>
+             <img src="/img/comments.png" class="p_comment" alt="комментарии">
+             <span class="p_digit_c">${album.comments}</span>
+             <div class="enter_for_like">
+                 <h4 class="enter_question">Понравилось произведение?</h4>
+                 <p>Войдите в аккаунт, чтобы поставить отметку</p>
+                 <a href="/target/album/${album.id}" class="login">Войти</a>
+             </div>
+          </div>
+          <div class="releaseDate">${album.releaseDate?truncate(11, "")}</div>
       </div>
 
       <img src="/img/vin.png" class="vignette" alt="виньетка">
@@ -71,7 +79,7 @@
           </div>
         </div>
       <#else>
-        Пожалуйста, зарегистрируйтесь!
+        <p class="enter_for_comment">Пожалуйста, <a href="/target/album/${album.id}" class="auth_link">авторизуйтесь,</a> чтобы оставить комментарий!</p>
       </#if>
     </div>
   </div>

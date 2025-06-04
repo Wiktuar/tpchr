@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.tpchr.DTO.CompositionDTO;
 import ru.tpchr.DTO.EditPoemDTO;
 import ru.tpchr.DTO.LikesPoemDto;
 import ru.tpchr.entities.poem.Content;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.Principal;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class PoemController {
@@ -121,10 +123,12 @@ public class PoemController {
 
     //  метод, возвращающий превью стихотворений для конкретного автора
     @GetMapping("/authors/{id}/poems")
-    public ResponseEntity<List<LikesPoemDto>> getPoemsByAuthorId(
+    public ResponseEntity<List<? extends CompositionDTO>> getPoemsByAuthorId(
             @PathVariable long id,
             Principal principal){
-        List<LikesPoemDto> lpd =  poemService.getPoemsByAuthorID(principal.getName(), id);
+        String principalName = "";
+        principalName = (Objects.isNull(principal)) ? "default" : principal.getName();
+        List<? extends CompositionDTO> lpd =  poemService.getPoemsByAuthorID(principalName, id);
         return ResponseEntity.ok()
                 .header("X-Total-Count", String.valueOf(lpd.size()))
                 .body(lpd);

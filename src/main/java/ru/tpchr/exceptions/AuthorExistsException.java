@@ -10,5 +10,3 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class AuthorExistsException extends RuntimeException{
 }
 
-//https://zetcode.com/springboot/responsestatus/
-// здесь можно посмотреть, как во фримаркере сделать страницу с ошибкой

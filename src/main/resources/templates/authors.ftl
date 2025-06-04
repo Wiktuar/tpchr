@@ -17,7 +17,7 @@
     <@c.header></@c.header>
     <#--блок с основным контентом-->
     <div class="container">
-        <h1>Авторы проекта "Творчество со смыслом"</h1>
+        <h1>Авторы проекта "Творчество православных христиан"</h1>
         <div class="authors_container">
             <#list authors as author>
                 <a href="/main/author/${author.id}" class="author_link">

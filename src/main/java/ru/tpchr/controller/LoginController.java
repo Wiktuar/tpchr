@@ -38,7 +38,8 @@ public class LoginController {
 
     // получение страницы регистрации автора
     @GetMapping("/registration")
-    public String getRegistrationPage(){
+    public String getRegistrationPage(Model model){
+        model.addAttribute("authorDTO", headerMenuUtil.getAuthorDTO());
         return "personal/registration";
     }
 
